@@ -2,19 +2,26 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 # from sklearn.externals import joblib
+import joblib
 from sklearn.metrics import classification_report, accuracy_score
 
+# データ取得
 iris = load_iris()
-X, y = iris.data, iris.target
+x, y = iris.data, iris.target
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
+# 訓練データとテストデータに分割
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.5, random_state=0)
 
-model = MLPClassifier(solver='sgd', random_state=0, max_iter=3000)
+# solverには確率的勾配降下法(sgd)やadaなどが利用可能です。
+model = MLPClassifier(solver="sgd", random_state=0, max_iter=3000)
 
-model.fit(X_train, y_train)
-pred = model.predict(X_test)
+# 学習
+model.fit(x_train, y_train)
+pred = model.predict(x_test)
 
-# joblib.domp(model, 'nn.pkl', compress=True)
+# 学習済みモデルの保存
+joblib.dump(model, "nn.pkl", compress=True)
 
-print('result:', model.score(X_test, y_test))
+# 予測精度
+print("result: ", model.score(x_test, y_test))
 print(classification_report(y_test, pred))
